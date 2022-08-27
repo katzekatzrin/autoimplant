@@ -1,4 +1,5 @@
 from __future__ import division
+import os
 import numpy as np
 import scipy
 import scipy.ndimage
@@ -92,7 +93,10 @@ def padding(data):
 
 
 def load_bbox_pair(list_bbox,list_data,list_label):
-    idx=random.randrange(0,100,1)
+    print("bbox: ", len(list_bbox))
+    print("list_data: ", len(list_data))
+    print("list_label: ", len(list_label))
+    idx=random.randrange(0,len(list_bbox),1)
 
     bbox,hb=nrrd.read(list_bbox[idx])
     print('bbox',list_bbox[idx])

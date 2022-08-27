@@ -1,5 +1,6 @@
 from glob import glob
 from conv3 import *
+import os
 import numpy as np
 import nrrd
 from data_loader import *
@@ -32,7 +33,7 @@ class auto_encoder(object):
         # directory containing the 95 up-&downsampled implants
         self.train_data_dir = "../training_updown_512"
         # ground truth (implants) for the training data
-        self.train_label_dir = "/training_labels_implants512"
+        self.train_label_dir = "../training_labels_implants512"
         # test data directory
         self.test_data_dir = "../testing_implants"
         # directory where the predicted implants from model n1 is stored 
@@ -133,6 +134,9 @@ class auto_encoder(object):
         data_list = sorted(glob('{}/*.nrrd'.format(self.train_data_dir)))
         label_list = sorted(glob('{}/*.nrrd'.format(self.train_label_dir)))
         bbox_list = sorted(glob('{}/*.nrrd'.format(self.bbox_dir)))
+        print("Data_list: ", len(data_list))
+        print("Label_List: ", len(label_list))
+        print("BBox_list: ", len(bbox_list))
         i=0
         for epoch in np.arange(self.epoch):
             i=i+1

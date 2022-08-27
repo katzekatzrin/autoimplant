@@ -1,6 +1,6 @@
 import os
 import tensorflow as tf
-from n1_model import auto_encoder
+#from n1_model import auto_encoder
 from n2_model import auto_encoder
 #from skull_completion_model import auto_encoder
 
