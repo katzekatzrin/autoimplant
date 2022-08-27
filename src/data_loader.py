@@ -11,7 +11,7 @@ from scipy.ndimage import zoom
 
 def resizing(label):
     a,b,c=label.shape
-    resized_data = zoom(label,(128/a,128/b,64/c),order=2, mode='constant')  
+    resized_data = zoom(label,(512/a,512/b,256/c),order=2, mode='constant')  
     return resized_data
 
 def load_batch_pair(list1,list2):
@@ -79,12 +79,13 @@ margin=20
 
 def padding(data):
     temp=np.zeros(shape=(256,256,128))
-    xl=int(data.shape[0]/2)
-    xl_r=data.shape[0]-xl
-
-    yl=int(data.shape[1]/2)
-    y1_r=data.shape[1]-yl    
-    temp[128-xl:128+xl_r,128-yl:128+y1_r,]=data
+    xl = int(data.shape[0]/2)
+    xl_r = data.shape[0]-xl
+    yl = int(data.shape[1]/2)
+    y1_r = data.shape[1]-yl
+    zl = int(data.shape[2]/2)
+    zl_r = data.shape[2]-zl      
+    temp[128-xl:128+xl_r,128-yl:128+y1_r,64-zl:64+zl_r]=data
 
     return temp
 
@@ -103,13 +104,15 @@ def load_bbox_pair(list_bbox,list_data,list_label):
     print('label',list_label[idx])
 
     resx,resxx,resy,resyy,resz,reszz=bbox_cal(bbox,data.shape[2])
-    print(resx)
-    print(resxx)
-    print(resy)
-    print(resyy)
+    print("resx: ", resx)
+    print("resxx: ", resxx)
+    print("resy: ", resy)
+    print("resyy: ", resyy)
+    print("resz: ", resz)
+    print("reszz: ", reszz)
 
-    data_inp=data[resx-margin:512-resxx+margin,resy-margin:521-resyy+margin,data.shape[2]-128:data.shape[2]]
-    data_lb=label[resx-margin:512-resxx+margin,resy-margin:512-resyy+margin,data.shape[2]-128:data.shape[2]]
+    data_inp=data[resx-margin:512-resxx+margin,resy-margin:512-resyy+margin,resz-margin:256-reszz+margin]
+    data_lb=label[resx-margin:512-resxx+margin,resy-margin:512-resyy+margin,resz-margin:256-reszz+margin]
 
     data_inp=padding(data_inp)
     data_lb=padding(data_lb)

@@ -29,12 +29,12 @@ class auto_encoder(object):
 
         # directory where the checkpoint can be saved/loaded
         self.chkpoint_dir   = "../ckpt"
-        # directory containing the 100 training defective skulls
-        self.train_data_dir = "../training_defective_skull"
+        # directory containing the 95 up-&downsampled implants
+        self.train_data_dir = "../training_updown_512"
         # ground truth (implants) for the training data
-        self.train_label_dir = "/implants"
+        self.train_label_dir = "/training_labels_implants512"
         # test data directory
-        self.test_data_dir = "../testing_defective_skulls"
+        self.test_data_dir = "../testing_implants"
         # directory where the predicted implants from model n1 is stored 
         self.bbox_dir = "../predictions_n1"
         # where to save the predicted implants
@@ -123,10 +123,16 @@ class auto_encoder(object):
         loss_summary_0 =tf.summary.scalar('dice loss',self.Loss)
         self.sess.run(init_op)
         self.log_writer = tf.summary.FileWriter("./logs", self.sess.graph)
+        ### ckpoint load
+        if self.load_chkpoint(self.chkpoint_dir):
+            print(" *****Successfully load the checkpoint**********")
+        else:
+            print("*******Fail to load the checkpoint***************")  
+        ###
         counter=1
-        data_list =glob('{}/*.nrrd'.format(self.train_data_dir))
-        label_list=glob('{}/*.nrrd'.format(self.train_label_dir))
-        bbox_list=glob('{}/*.nrrd'.format(self.bbox_dir))
+        data_list = sorted(glob('{}/*.nrrd'.format(self.train_data_dir)))
+        label_list = sorted(glob('{}/*.nrrd'.format(self.train_label_dir)))
+        bbox_list = sorted(glob('{}/*.nrrd'.format(self.bbox_dir)))
         i=0
         for epoch in np.arange(self.epoch):
             i=i+1
