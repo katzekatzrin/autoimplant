@@ -1,10 +1,10 @@
 import os
+os.environ['CUDA_VISIBLE_DEVICES']="0,1,2,3,4,5"
 import tensorflow as tf
 #from n1_model import auto_encoder
 from n2_model import auto_encoder
 #from skull_completion_model import auto_encoder
-
-config = tf.ConfigProto()
+config = tf.ConfigProto(device_count = {'GPU':5})
 config.gpu_options.per_process_gpu_memory_fraction = 0.90
 sess1 = tf.Session(config=config)
 with sess1.as_default():
@@ -19,9 +19,9 @@ with sess1.as_default():
             total_parameters += variable_parameters
         print('trainable params:',total_parameters)
         # to train the selected model
-        model.train()
+        #model.train()
         # to generate implants using the trained model
-        #model.test()
+        model.test()
 
 
  

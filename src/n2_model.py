@@ -1,5 +1,6 @@
 from glob import glob
 from conv3 import *
+from tqdm import tqdm
 import os
 import numpy as np
 import nrrd
@@ -23,7 +24,7 @@ class auto_encoder(object):
         self.output_chn     = 2
         self.lr             = 0.0001
         self.beta1          = 0.3
-        self.epoch          = 10000
+        self.epoch          = 2500
         self.model_name     = 'n2.model'
         self.save_intval    = 100
         self.build_model()
@@ -39,7 +40,7 @@ class auto_encoder(object):
         # directory where the predicted implants from model n1 is stored 
         self.bbox_dir = "../predictions_n1"
         # where to save the predicted implants
-        self.save_dir = "../predictions_n2/"
+        self.save_dir = "/homes/kmariacher/autoimplant/predictions_n2/"
 
 
 
@@ -138,7 +139,7 @@ class auto_encoder(object):
         print("Label_List: ", len(label_list))
         print("BBox_list: ", len(bbox_list))
         i=0
-        for epoch in np.arange(self.epoch):
+        for epoch in tqdm(np.arange(self.epoch)):
             i=i+1
             print('creating batches for training epoch :',i)
             batch_img1, batch_label1,hd,hl= load_bbox_pair(bbox_list,data_list,label_list)
@@ -165,8 +166,8 @@ class auto_encoder(object):
             print(" *****Successfully load the checkpoint**********")
         else:
             print("*******Fail to load the checkpoint***************")
-        data_list =glob('{}/*.nrrd'.format(self.test_data_dir))
-        bbox_list=glob('{}/*.nrrd'.format(self.bbox_dir))
+        data_list = sorted(glob('{}/*.nrrd'.format(self.test_data_dir)))
+        bbox_list=sorted(glob('{}/*.nrrd'.format(self.bbox_dir)))
         k=1
         for i in range(len(data_list)):
             print('generating result for test sample',k)
@@ -174,7 +175,9 @@ class auto_encoder(object):
             test_output = self.sess.run(self.task0_label, feed_dict={self.input_I: test_input})
             #implants_post_processed=post_processing(test_output[0,:,:,:])
             #filename=self.save_dir+"implants%d.nrrd"%i
-            filename=self.save_dir+bbox_list[i][-15:-5]+'.nrrd'
+            filenumber = data_list[i][-8:-5:]
+            filename=self.save_dir+"SuperReso_"+filenumber+".nrrd"
+            #filename=self.save_dir+bbox_list[i][-15:-5]+'.nrrd'
             nrrd.write(filename,test_output[0,:,:,:].astype('float32'),header)
             k+=1
   

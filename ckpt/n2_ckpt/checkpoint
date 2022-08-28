@@ -1,0 +1,6 @@
+model_checkpoint_path: "n2.model-2500"
+all_model_checkpoint_paths: "n2.model-2100"
+all_model_checkpoint_paths: "n2.model-2200"
+all_model_checkpoint_paths: "n2.model-2300"
+all_model_checkpoint_paths: "n2.model-2400"
+all_model_checkpoint_paths: "n2.model-2500"
